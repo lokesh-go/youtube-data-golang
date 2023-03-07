@@ -1,3 +1,18 @@
 {
-    "app": "youtube-data-golang"
+    "app": "youtube-data-golang",
+    "youtube": {
+        "auth": {
+            "clientSecretFilePath": "/Users/lokeshchandra/Desktop/google/youtube/client.json",
+            "tokenFilePath": "/Users/lokeshchandra/Desktop/google/youtube/token.json"
+        },
+        "search": {
+            "part": "id,snippet",
+            "order": "date",
+            "type": "video",
+            "maxResults": 10,
+            "pagination": {
+                "enabled": true
+            }
+        }
+    }
 }

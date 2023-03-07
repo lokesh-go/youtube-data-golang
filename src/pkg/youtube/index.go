@@ -13,6 +13,7 @@ import (
 
 type service struct {
 	youtube *youtube.Service
+	config  *config.Config
 }
 
 // NewServices ...
@@ -30,7 +31,7 @@ func NewServices(config *config.Config) (Methods, error) {
 	}
 
 	// Returns
-	return &service{youtubeServices}, nil
+	return &service{youtubeServices, config}, nil
 }
 
 func getGoogleClient(config *config.Config) (client *http.Client, err error) {

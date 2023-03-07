@@ -19,6 +19,8 @@ func Initialize() error {
 		return err
 	}
 
+	youtubeServices.Search("bhola teaser")
+
 	// Returns
 	return nil
 }
