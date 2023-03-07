@@ -7,6 +7,7 @@ import (
 	dal "github.com/lokesh-go/youtube-data-golang/src/dal"
 	jobModule "github.com/lokesh-go/youtube-data-golang/src/job"
 	youtubePkg "github.com/lokesh-go/youtube-data-golang/src/pkg/youtube"
+	server "github.com/lokesh-go/youtube-data-golang/src/server"
 )
 
 // Initializes the app
@@ -36,6 +37,10 @@ func Initialize() error {
 	// And push data into database
 	job := jobModule.New(config, ytServices, dalServices)
 	job.Start()
+
+	// Starts server
+	server := server.New(config, dalServices)
+	server.Start()
 
 	// Returns
 	return nil

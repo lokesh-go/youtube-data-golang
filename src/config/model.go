@@ -2,7 +2,12 @@ package config
 
 // Config ...
 type Config struct {
-	App        string
+	App    string
+	Server struct {
+		HTTP struct {
+			Port string
+		}
+	}
 	Datastores struct {
 		Youtube struct {
 			Hosts       []string
