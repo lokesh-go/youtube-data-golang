@@ -2,7 +2,31 @@ package config
 
 // Config ...
 type Config struct {
-	App     string
+	App        string
+	Datastores struct {
+		Youtube struct {
+			Hosts       []string
+			User        string
+			Password    string
+			Auth        bool
+			Authsource  string
+			Database    string
+			Collections struct {
+				Youtube string
+			}
+			Connections struct {
+				ReplicaSetName         *string
+				MinPoolSize            *uint64
+				MaxPoolSize            *uint64
+				MaxConnecting          *uint64
+				MaxConnIdleTime        *int
+				Timeout                *int
+				SocketTimeout          *int
+				ReadConcernMajority    bool
+				ReadSecondaryPreferred bool
+			}
+		}
+	}
 	Youtube struct {
 		Auth struct {
 			ClientSecretFilePath string
@@ -17,5 +41,9 @@ type Config struct {
 				Enabled bool
 			}
 		}
+	}
+	Job struct {
+		Enabled  bool
+		Interval string
 	}
 }

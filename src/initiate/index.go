@@ -2,6 +2,8 @@ package initiate
 
 import (
 	config "github.com/lokesh-go/youtube-data-golang/src/config"
+	dal "github.com/lokesh-go/youtube-data-golang/src/dal"
+	jobModule "github.com/lokesh-go/youtube-data-golang/src/job"
 	youtubePkg "github.com/lokesh-go/youtube-data-golang/src/pkg/youtube"
 )
 
@@ -14,12 +16,21 @@ func Initialize() error {
 	}
 
 	// Initialises youtube services
-	youtubeServices, err := youtubePkg.NewServices(config)
+	ytServices, err := youtubePkg.NewServices(config)
 	if err != nil {
 		return err
 	}
 
-	youtubeServices.Search("bhola teaser")
+	// Intialises database services
+	dalServices, err := dal.Initialize(config)
+	if err != nil {
+		return err
+	}
+
+	// Starts job to call the YouTube API continuously in background
+	// And push data into database
+	job := jobModule.New(config, ytServices, dalServices)
+	job.Start()
 
 	// Returns
 	return nil
