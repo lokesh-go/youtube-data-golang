@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 
 	ytModels "github.com/lokesh-go/youtube-data-golang/src/pkg/youtube/models"
+	utils "github.com/lokesh-go/youtube-data-golang/src/utils"
 )
 
 const (
@@ -22,6 +23,7 @@ const (
 // Methods ...
 type Methods interface {
 	PushData(response []ytModels.SearchResponse) error
+	GetAllData(currentPage int64) ([]GetAllResponse, error)
 }
 
 // PushData ...
@@ -59,4 +61,32 @@ func (d *dal) PushData(response []ytModels.SearchResponse) (err error) {
 
 	// Returns
 	return nil
+}
+
+// GetData ...
+func (d *dal) GetAllData(currentPage int64) (response []GetAllResponse, err error) {
+	// Gets config
+	limit := int64(d.config.Datastores.Youtube.Pagination.ResponsePerPage)
+	skip := (currentPage - 1) * limit
+	sort := map[string]interface{}{
+		PublishedAtIdentifier: -1,
+	}
+
+	// Get all data
+	data, err := d.dbServices.FindAll(context.Background(), d.config.Datastores.Youtube.Collections.Youtube, &skip, &limit, sort)
+	if err != nil {
+		return nil, err
+	}
+
+	// Ranges
+	response = []GetAllResponse{}
+	for _, d := range data {
+		res := GetAllResponse{}
+		bytes, _ := utils.BSONMarshal(d)
+		utils.BSONUnmarshal(bytes, &res)
+		response = append(response, res)
+	}
+
+	// Returns
+	return response, nil
 }

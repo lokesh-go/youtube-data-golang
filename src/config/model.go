@@ -30,6 +30,9 @@ type Config struct {
 				ReadConcernMajority    bool
 				ReadSecondaryPreferred bool
 			}
+			Pagination struct {
+				ResponsePerPage int
+			}
 		}
 	}
 	Youtube struct {
@@ -46,6 +49,9 @@ type Config struct {
 				Enabled bool
 			}
 		}
+	}
+	Timeout struct {
+		GetDataHandler int64
 	}
 	Job struct {
 		Enabled  bool

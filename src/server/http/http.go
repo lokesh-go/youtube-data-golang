@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
+	rest "github.com/lokesh-go/youtube-data-golang/src/apis/rest"
 	config "github.com/lokesh-go/youtube-data-golang/src/config"
 	dal "github.com/lokesh-go/youtube-data-golang/src/dal"
 )
@@ -31,6 +32,10 @@ func (h *httpConfig) Start() {
 
 	// Health check
 	echoServer.GET("/ping", h.checkPing)
+
+	// Builds restful router
+	restModule := rest.New(h.config, h.dalServices)
+	restModule.BuildRouter(echoServer)
 
 	// Starts servers
 	echoServer.Start(h.config.Server.HTTP.Port)
