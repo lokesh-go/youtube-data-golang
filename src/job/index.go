@@ -2,6 +2,7 @@ package job
 
 import (
 	"log"
+	"time"
 
 	"github.com/robfig/cron"
 
@@ -45,12 +46,22 @@ func (c *client) Start() {
 }
 
 func (c *client) fetchLatestVideoAndPushData() {
+	log.Println("job started at: ", time.Now().String())
+
 	// Search on youtube
-	res, err := c.ytServices.Search(searchText)
+	data, err := c.ytServices.Search(searchText)
 	if err != nil {
 		log.Println("youtube search error: ", err.Error())
 		return
 	}
+	log.Println("search results from youtube: ", len(data))
 
-	
+	// Push data
+	err = c.dalServices.PushData(data)
+	if err != nil {
+		log.Println("push data error: ", err.Error())
+	}
+	log.Println("data pushed to database")
+
+	log.Println("job finished at: ", time.Now().String())
 }
