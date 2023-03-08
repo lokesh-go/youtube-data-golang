@@ -11,9 +11,21 @@ This service contains API to fetch latest video sorted in reverse chronological 
   - A search API to search the stored videos using their title and description.
   
 ### Dependencies to run this project
-  - Need to set `credentials.json` file path. Please create a new project on [google-cloud-platform](https://developers.google.com) and download the credential file.
-  - Need to set mongodb config for database operations.
-  
+  - Need `API_KEY`. Go to [google-cloud-platform](https://developers.google.com) and get the API key from existing project or creating new project with Youtube data V3 API permission.
+  - Keep `Docker` up and running in your machine.
+
+### Process to RUN this project
+  - Set API key into environment variable. (`export YOUTUBE_API_KEY=XXXXXXXXXXXXX`)
+  - Clone this project. (`git clone https://github.com/lokesh-go/youtube-data-golang`)
+  - Switch into project. (`cd youtube-data-golang`)
+  - RUN the `run.sh` script. (`./script/run.sh`)
+
+### Testing the Project
+  - Testing Database
+    - Open and connect your mongodb client at `127.0.0.1:27017` with user and password `test`.
+    - Checks your data in `youtube` collection which will part of database `youtubedata`.
+  - Testing App
+    - Test the GET data API. `curl --location --request GET 'http://localhost/api/youtube/v1/data?page=1'`
 
 ### Problem breakdown (High Level)
 
