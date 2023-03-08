@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -67,4 +68,9 @@ func BSONUnmarshal(bytes []byte, instance interface{}) (err error) {
 
 	// Returns
 	return nil
+}
+
+// GetEnv ...
+func GetEnv(key string) (value string) {
+	return os.Getenv(key)
 }

@@ -36,10 +36,7 @@ type Config struct {
 		}
 	}
 	Youtube struct {
-		Auth struct {
-			ClientSecretFilePath string
-			TokenFilePath        string
-		}
+		APIKey string
 		Search struct {
 			Part       string
 			Order      string

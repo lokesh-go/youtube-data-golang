@@ -1,0 +1,30 @@
+version: "3.7"
+
+services:
+  app:
+    image: golang:1.19
+    container_name: youtube-data-app
+    ports:
+      - "80:80"
+    restart: always
+    links:
+      - mongo
+    depends_on:
+      - mongo
+    environment:
+      - YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
+    volumes:
+      - ..:/go/src/github.com/lokesh-go/youtube-data-golang
+    working_dir: /go/src/github.com/lokesh-go/youtube-data-golang/src
+    command: ["go", "run", "main.go"]
+  mongo:
+    image: mongo
+    container_name: youtube-mongo-db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=test
+      - MONGO_INITDB_ROOT_PASSWORD=test
+    volumes:
+      - ~/mongo/data:/data/db
+    ports:
+      - "27017:27017"
+
