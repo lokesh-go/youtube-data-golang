@@ -8,7 +8,7 @@ This service contains API to fetch latest video sorted in reverse chronological 
   - It runs background job to fetching latest videos data from Youtube and pushes into database in every X configured time.
   - Youtube searches response return in sorted reverse chronological order of their publishing date-time.
   - It has exposes APIs to get Youtube data from database in a paginated response sorted in descending order of published datetime.
-  - A search API to search the stored videos using their title and description.
+  - A search API to search the stored videos using their title. (containing partial match)
   
 ### Dependencies to run this project
   - Need `API_KEY`. Go to [google-cloud-platform](https://developers.google.com) and get the API key from existing project or creating new project with Youtube data V3 API permission.
@@ -26,6 +26,7 @@ This service contains API to fetch latest video sorted in reverse chronological 
     - Checks your data in `youtube` collection which will part of database `youtubedata`.
   - Testing App
     - Test the GET data API. `curl --location --request GET 'http://localhost/api/youtube/v1/data?page=1'`
+    - Test the Search API. `curl --location --request POST 'http://localhost/api/youtube/v1/data/Reaction Bholaa Trailer/search'`
 
 ### Problem breakdown (High Level)
 
