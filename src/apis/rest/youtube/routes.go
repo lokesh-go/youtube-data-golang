@@ -31,5 +31,6 @@ func (d *dependencies) RegisterRoutes(e *echo.Echo) {
 	youtubeV1Routes := youtubeRoute.Group("/v1")
 	{
 		youtubeV1Routes.GET("/data", d.GetData, middlewares.Timeout(d.config.Timeout.GetDataHandler))
+		youtubeV1Routes.POST("/data/:searchtext/search", d.Search, middlewares.Timeout(d.config.Timeout.SearchDataHandler))
 	}
 }

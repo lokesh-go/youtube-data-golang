@@ -47,7 +47,8 @@
         }
     },
     "timeout": {
-        "getDataHandler": 500
+        "getDataHandler": 500,
+        "searchDataHandler": 500
     },
     "job": {
         "enabled": true,

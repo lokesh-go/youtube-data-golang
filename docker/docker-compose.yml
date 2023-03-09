@@ -24,7 +24,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=test
       - MONGO_INITDB_ROOT_PASSWORD=test
     volumes:
-      - ~/mongo/data:/data/db
+      - ~/mongo/data/youtube:/data/db
     ports:
       - "27017:27017"
 

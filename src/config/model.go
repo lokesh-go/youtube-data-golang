@@ -48,7 +48,8 @@ type Config struct {
 		}
 	}
 	Timeout struct {
-		GetDataHandler int64
+		GetDataHandler    int64
+		SearchDataHandler int64
 	}
 	Job struct {
 		Enabled  bool

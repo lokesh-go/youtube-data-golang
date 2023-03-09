@@ -15,6 +15,7 @@ type Methods interface {
 	FindAll(ctx context.Context, collection string, skip, limit *int64, sort map[string]interface{}) ([]interface{}, error)
 	CreateIndex(ctx context.Context, collection string, indexKeys []string, unique bool) (res string, err error)
 	ListCollectionNames(ctx context.Context) (res []string, err error)
+	FindAndSort(ctx context.Context, collection string, query interface{}, sort interface{}) (res []interface{}, err error)
 }
 
 // BulkWrite ...
@@ -99,6 +100,38 @@ func (c *clients) ListCollectionNames(ctx context.Context) (res []string, err er
 	res, err = c.database.ListCollectionNames(ctx, filter)
 	if err != nil {
 		return nil, err
+	}
+
+	// Returns
+	return res, nil
+}
+
+// FindAndSort ...
+func (c *clients) FindAndSort(ctx context.Context, collection string, query interface{}, sort interface{}) (res []interface{}, err error) {
+	// Forms find option
+	options := &options.FindOptions{}
+
+	// If sort key-value is given
+	if sort != nil {
+		options.Sort = sort
+	}
+
+	// Hits DB
+	cursor, err := c.database.Collection(collection).Find(ctx, query, options)
+	if err != nil {
+		return nil, err
+	}
+
+	// Close connection at the last
+	defer cursor.Close(ctx)
+
+	// Binds cursor response
+	err = cursor.All(ctx, &res)
+	if err != nil {
+		return nil, err
+	}
+	if len(res) == 0 {
+		return nil, nil
 	}
 
 	// Returns

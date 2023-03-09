@@ -2,6 +2,7 @@ package dal
 
 import (
 	"context"
+	"strings"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -24,6 +25,7 @@ const (
 type Methods interface {
 	PushData(response []ytModels.SearchResponse) error
 	GetAllData(currentPage int64) ([]GetAllResponse, error)
+	SearchData(searchText string) (response []GetAllResponse, err error)
 }
 
 // PushData ...
@@ -88,6 +90,63 @@ func (d *dal) GetAllData(currentPage int64) (response []GetAllResponse, err erro
 
 	// Get all data
 	data, err := d.dbServices.FindAll(context.Background(), d.config.Datastores.Youtube.Collections.Youtube, &skip, &limit, sort)
+	if err != nil {
+		return nil, err
+	}
+
+	// Ranges
+	response = []GetAllResponse{}
+	for _, d := range data {
+		res := GetAllResponse{}
+		bytes, _ := utils.BSONMarshal(d)
+		utils.BSONUnmarshal(bytes, &res)
+		response = append(response, res)
+	}
+
+	// Returns
+	return response, nil
+}
+
+// SearchData ...
+func (d *dal) SearchData(searchText string) (response []GetAllResponse, err error) {
+	var query bson.D
+
+	// Trims spaces
+	searchText = strings.Trim(searchText, " ")
+
+	// Checks search text have multiple words
+	if !strings.Contains(searchText, " ") {
+		query = bson.D{
+			primitive.E{Key: TitleIdentifier, Value: primitive.Regex{
+				Pattern: searchText,
+			}},
+		}
+	} else {
+		// Search text have multiple words
+		text := strings.Split(searchText, " ")
+		queryArray := bson.D{}
+
+		// Forms query array
+		for _, t := range text {
+			q := primitive.E{Key: TitleIdentifier, Value: primitive.Regex{
+				Pattern: t,
+			}}
+			queryArray = append(queryArray, q)
+		}
+
+		// Forms and query
+		query = bson.D{
+			primitive.E{Key: "$and", Value: bson.A{queryArray}},
+		}
+	}
+
+	// Forms sort
+	sort := map[string]interface{}{
+		PublishedAtIdentifier: -1,
+	}
+
+	// Find search
+	data, err := d.dbServices.FindAndSort(context.Background(), d.config.Datastores.Youtube.Collections.Youtube, query, sort)
 	if err != nil {
 		return nil, err
 	}
