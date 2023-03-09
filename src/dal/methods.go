@@ -33,6 +33,20 @@ func (d *dal) PushData(response []ytModels.SearchResponse) (err error) {
 		return nil
 	}
 
+	// Get all collections
+	collections, err := d.dbServices.ListCollectionNames(context.Background())
+	if err != nil {
+		return err
+	}
+
+	// Check
+	if !utils.Contains(collections, d.config.Datastores.Youtube.Collections.Youtube) {
+		// Create index if collection is not there
+		// Note: If Collection is already there thne it will not create the index.
+		d.dbServices.CreateIndex(context.Background(), d.config.Datastores.Youtube.Collections.Youtube, []string{TitleIdentifier}, true)
+		d.dbServices.CreateIndex(context.Background(), d.config.Datastores.Youtube.Collections.Youtube, []string{PublishedAtIdentifier}, true)
+	}
+
 	// Forms query
 	models := []mongo.WriteModel{}
 	for _, data := range response {

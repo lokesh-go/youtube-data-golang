@@ -74,3 +74,13 @@ func BSONUnmarshal(bytes []byte, instance interface{}) (err error) {
 func GetEnv(key string) (value string) {
 	return os.Getenv(key)
 }
+
+// Contains ...
+func Contains(keys []string, key string) (found bool) {
+	for _, v := range keys {
+		if v == key {
+			return true
+		}
+	}
+	return false
+}
